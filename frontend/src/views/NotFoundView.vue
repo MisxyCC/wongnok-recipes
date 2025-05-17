@@ -5,11 +5,11 @@
     <div
       class="bg-white shadow-2xl rounded-xl p-8 md:p-16 w-full max-w-lg transform transition-all duration-300"
     >
-      
       <h1 class="text-7xl md:text-9xl font-extrabold text-indigo-600 tracking-tighter">404</h1>
       <h2 class="mt-4 text-3xl md:text-4xl font-bold text-gray-800">Page Not Found</h2>
       <p class="mt-4 text-md md:text-lg text-gray-600 leading-relaxed">
-        โอ๊ะ! ดูเหมือนว่าไม่พบหน้าที่คุณกำลังมองหา ซึ่งอาจไม่มีอยู่อีกต่อไป ถูกลบไปแล้ว หรือคุณอาจพิมพ์ URL ไม่ถูกต้อง
+        โอ๊ะ! ดูเหมือนว่าไม่พบหน้าที่คุณกำลังมองหา ซึ่งอาจไม่มีอยู่อีกต่อไป ถูกลบไปแล้ว
+        หรือคุณอาจพิมพ์ URL ไม่ถูกต้อง
       </p>
       <div class="mt-10">
         <router-link

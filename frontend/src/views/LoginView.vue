@@ -111,11 +111,12 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 
 const username = ref<string>('');
 const password = ref<string>('');
 const isLoading = ref<boolean>(false);
-
+const router = useRouter();
 const handleSubmit = async () => {
   if (!username.value || !password.value) {
     alert('Please enter both username and password.');
@@ -137,6 +138,7 @@ const handleSubmit = async () => {
 
   username.value = '';
   password.value = '';
+  router.push('/');
 };
 </script>
 

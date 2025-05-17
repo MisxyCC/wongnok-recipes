@@ -1,4 +1,6 @@
 <template>
-  <h1>This is the main view page</h1>
+  <NavMenu></NavMenu>
 </template>
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import NavMenu from '@/components/NavMenu.vue';
+</script>
