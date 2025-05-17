@@ -92,32 +92,17 @@
             class="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition duration-150 ease-in-out"
             :disabled="isLoading"
           >
-            <span class="absolute left-0 inset-y-0 flex items-center pl-3">
-              <svg
-                class="h-5 w-5 text-purple-500 group-hover:text-purple-400 transition ease-in-out duration-150"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-                aria-hidden="true"
-              >
-                <path
-                  fill-rule="evenodd"
-                  d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
-                  clip-rule="evenodd"
-                />
-              </svg>
-            </span>
-            {{ isLoading ? 'Signing in...' : 'เข้าสู่ระบบ' }}
+            {{ isLoading ? 'กำลังเข้าสู่ระบบ..' : 'เข้าสู่ระบบ' }}
           </button>
         </div>
       </form>
 
       <p class="mt-8 text-center text-sm text-gray-600">
-        ยังไม่มีแอคเค้าท์?
+        ยังไม่มีบัญชีผู้ใช้?
         <RouterLink
           to="/register"
           class="font-medium text-purple-600 hover:text-purple-500 transition duration-150 ease-in-out"
-          >ลงทะเบียน</RouterLink
+          >สมัครสมาชิก</RouterLink
         >
       </p>
     </div>

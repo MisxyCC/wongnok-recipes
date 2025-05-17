@@ -127,31 +127,15 @@
             class="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition duration-150 ease-in-out"
             :disabled="isLoading"
           >
-            <span class="absolute left-0 inset-y-0 flex items-center pl-3">
-              <svg
-                class="h-5 w-5 text-purple-500 group-hover:text-purple-400 transition ease-in-out duration-150"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="1.5"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
-              </svg>
-            </span>
-            {{ isLoading ? 'กำลัลงทะเบียน..' : 'ลงทะเบียน' }}
+            {{ isLoading ? 'กำลังสมัครสมาชิก..' : 'สมัครสมาชิก' }}
           </button>
         </div>
       </form>
 
       <p class="mt-8 text-center text-sm text-gray-600">
-        มีแอคเค้าท์อยู่แล้ว?
+        มีบัญชีผู้ใช้อยู่แล้ว?
         <RouterLink
-          to="/"
+          to="/Login"
           class="font-medium text-purple-600 hover:text-purple-500 transition duration-150 ease-in-out"
           >เข้าสู่ระบบ</RouterLink
         >
