@@ -1,5 +1,5 @@
 <template>
-  <div class="card">
+  <div class="card text-xl">
     <Menubar :model="items">
       <template #end>
         <div class="flex items-center px-2">
@@ -9,7 +9,7 @@
             aria-label="Logout"
           >
             <p class="text-green-700">
-              {{ isAuthenticated ? 'ออกจากระบบ' : 'เข้าสู่ระบบ' }}
+              {{ userStoreInstance.isAuthenticated ? 'ออกจากระบบ' : 'เข้าสู่ระบบ' }}
             </p>
           </button>
         </div>
@@ -21,7 +21,7 @@
 import { ref, type Ref } from 'vue';
 import Menubar from 'primevue/menubar';
 import { useRouter } from 'vue-router';
-
+import { userStoreInstance } from '@/main';
 const router = useRouter();
 const items = ref([
   {
@@ -30,11 +30,12 @@ const items = ref([
   },
 ]);
 
-const isAuthenticated: Ref<boolean> = ref(false);
+
 
 // Logout function
 const logout = () => {
   console.log('Logout action triggered');
+  userStoreInstance.isAuthenticated = false;
   // --- Implement your actual logout logic here ---
   // Examples:
   // 1. Clear authentication tokens (e.g., from localStorage or Vuex store)

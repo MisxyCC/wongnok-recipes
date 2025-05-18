@@ -5,7 +5,7 @@ import PrimeVue from 'primevue/config';
 import Aura from '@primeuix/themes/aura';
 import App from './App.vue';
 import router from './router';
-
+import { userStore } from '@/stores/counter';
 const app = createApp(App);
 app.use(PrimeVue, {
   theme: {
@@ -17,3 +17,5 @@ app.use(createPinia());
 app.use(router);
 
 app.mount('#app');
+
+export const userStoreInstance = userStore();

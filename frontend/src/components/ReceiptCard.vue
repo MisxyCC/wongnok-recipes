@@ -25,9 +25,9 @@
       </template>
       <template #footer>
         <div class="flex flex-col md:flex-row gap-3 mt-1">
-          <Button label="ให้คะแนนรีวิว" class="w-full" />
-          <Button label="แก้ไขรายการ" severity="info" class="w-full" @click="isReceiptManagementShown = true"/>
-          <Button label="ลบรายการ" severity="danger" outlined class="w-full" />
+          <Button label="ดูคะแนนรีวิว" class="w-full" />
+          <Button v-if="userStoreInstance.isAuthenticated" label="แก้ไขรายการ" severity="info" class="w-full" @click="isReceiptManagementShown = true"/>
+          <Button v-if="userStoreInstance.isAuthenticated" label="ลบรายการ" severity="danger" outlined class="w-full" />
         </div>
       </template>
     </Card>
@@ -36,9 +36,13 @@
 </template>
 
 <script setup lang="ts">
+import { userStoreInstance } from '@/main';
 import Badge from 'primevue/badge';
 import { ref, type Ref } from 'vue';
 const isReceiptManagementShown: Ref<boolean> = ref(false);
+function isAuthenticated() {
+  return userStoreInstance.isAuthenticated;
+}
 </script>
 
 <style scoped>

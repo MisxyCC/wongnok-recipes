@@ -111,6 +111,7 @@
 
 <script setup lang="ts">
 import { emptyString } from '@/constants/GlobalConstants';
+import { userStoreInstance } from '@/main';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 
@@ -136,7 +137,8 @@ const handleSubmit = async () => {
   alert(
     `Login submitted!\nUsername: ${username.value}\nPassword: ${password.value}\n(This is a demo, no actual login occurred)`,
   );
-
+  userStoreInstance.name = username.value;
+  userStoreInstance.isAuthenticated = true;
   username.value = emptyString;
   password.value = emptyString;
   router.push('/');

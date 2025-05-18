@@ -3,6 +3,7 @@
     <NavMenu></NavMenu>
   <div class="card flex flex-col md:flex-row justify-center items-center min-w-screen p-3 gap-2">
     <Button
+      v-if="userStoreInstance.isAuthenticated"
       label="เพิ่มข้อมูลสูตรอาหาร"
       icon="pi pi-plus"
       iconPos="left"
@@ -30,6 +31,8 @@ import ReceiptCard from '@/components/ReceiptCard.vue';
 import ReceiptManagement from '@/components/ReceiptManagement.vue';
 import AutoComplete from 'primevue/autocomplete';
 import { ref, watchEffect, type Ref } from 'vue';
+import { userStoreInstance } from '@/main';
+
 const isReceiptManagementShown: Ref<boolean> = ref(false);
 const value = ref(null);
 const items: Ref<string[]> = ref([]);
@@ -38,6 +41,7 @@ const ratings = ref(['1', '2', '3', '4', '5']);
 const search = (event: any) => {
   items.value = [...Array(10).keys()].map((item) => event.query + '-' + item);
 };
+ 
 watchEffect(() => {
   console.log('selectedRating: ', selectedRating.value);
 });
