@@ -110,11 +110,12 @@
 </template>
 
 <script setup lang="ts">
+import { emptyString } from '@/constants/GlobalConstants';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 
-const username = ref<string>('');
-const password = ref<string>('');
+const username = ref<string>(emptyString);
+const password = ref<string>(emptyString);
 const isLoading = ref<boolean>(false);
 const router = useRouter();
 const handleSubmit = async () => {
@@ -136,8 +137,8 @@ const handleSubmit = async () => {
     `Login submitted!\nUsername: ${username.value}\nPassword: ${password.value}\n(This is a demo, no actual login occurred)`,
   );
 
-  username.value = '';
-  password.value = '';
+  username.value = emptyString;
+  password.value = emptyString;
   router.push('/');
 };
 </script>

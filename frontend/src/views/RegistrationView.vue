@@ -145,6 +145,7 @@
 </template>
 
 <script setup lang="ts">
+import { emptyString } from '@/constants/GlobalConstants';
 import { ref } from 'vue';
 
 const name = ref<string>('');
@@ -182,9 +183,9 @@ const handleSubmit = async () => {
   );
 
   // Clear form after submission for this demo
-  name.value = '';
-  username.value = '';
-  password.value = '';
+  name.value = emptyString;
+  username.value = emptyString;
+  password.value = emptyString;
   // confirmPassword.value = ''; // Uncomment if using confirm password field
 };
 </script>
