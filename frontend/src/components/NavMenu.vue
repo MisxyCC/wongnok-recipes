@@ -2,13 +2,13 @@
   <div class="card">
     <Menubar :model="items">
       <template #end>
-        <div class="flex items-center gap-2">
+        <div class="flex items-center px-2">
           <button
             @click="logout"
             class="p-0 m-0 border-none bg-transparent cursor-pointer focus:outline-none"
             aria-label="Logout"
           >
-            <p class="pi pi-sign-out" style="color: green">
+            <p class="text-green-700">
               {{ isAuthenticated ? 'ออกจากระบบ' : 'เข้าสู่ระบบ' }}
             </p>
           </button>

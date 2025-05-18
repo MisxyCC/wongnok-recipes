@@ -1,5 +1,6 @@
 <template>
-  <NavMenu></NavMenu>
+  <div class="w-screen">
+    <NavMenu></NavMenu>
   <div class="card flex flex-col md:flex-row justify-center items-center min-w-screen p-3 gap-2">
     <Button
       label="เพิ่มข้อมูลสูตรอาหาร"
@@ -21,6 +22,7 @@
     <ReceiptCard></ReceiptCard>
   </div>
   <ReceiptManagement v-model:visible="isReceiptManagementShown"></ReceiptManagement>
+  </div>
 </template>
 <script setup lang="ts">
 import NavMenu from '@/components/NavMenu.vue';
