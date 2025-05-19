@@ -1,0 +1,48 @@
+services:
+  backend-app1:
+    container_name: backend-app1
+    env_file: ".env"
+    environment:
+      - PORT=${BackendPort}
+    build:
+      context: ../backend/
+      dockerfile: ../backend/Dockerfile
+    networks:
+      audit-network:
+        ipv4_address: 192.168.1.2
+
+  frontend-app:
+    container_name: frontend-app
+    env_file: ".env"
+    environment:
+      - PORT=${FrontendPort}
+    build:
+      context: ../frontend/
+      dockerfile: ../frontend/Dockerfile
+    ports:
+      - "${FrontendPort}:${FrontendPort}"
+    networks:
+      audit-network:
+        ipv4_address: 192.168.1.4
+      
+  reverse-proxy-backend:
+    container_name: reverse-proxy-backend
+    env_file: ".env"
+    environment:
+      - REVERSE_PROXY_PORT=${ReverseProxyPort}
+      - TZ=Asia/Bangkok
+    build: "./nginx"
+    ports:
+      - "${ReverseProxyPort}:70"
+    networks:
+      audit-network:
+        ipv4_address: 192.168.1.5
+    depends_on:
+      - "backend-app1"
+
+networks:
+  audit-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 192.168.1.0/24
