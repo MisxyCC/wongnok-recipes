@@ -1,14 +1,14 @@
 services:
-  # backend-app1:
-  #   container_name: backend-app1
-  #   environment:
-  #     - PORT=8081
-  #   build:
-  #     context: ../backend
-  #     dockerfile: Dockerfile
-  #   networks:
-  #     audit-network:
-  #       ipv4_address: 192.168.1.2
+  backend-app1:
+    container_name: backend-app1
+    environment:
+      - PORT=8081
+    build:
+      context: ../backend
+      dockerfile: Dockerfile
+    networks:
+      audit-network:
+        ipv4_address: 192.168.1.2
 
   frontend-app:
     container_name: frontend-app
@@ -23,19 +23,19 @@ services:
       audit-network:
         ipv4_address: 192.168.1.4
       
-  # reverse-proxy-backend:
-  #   container_name: reverse-proxy-backend
-  #   environment:
-  #     - REVERSE_PROXY_PORT=8082
-  #     - TZ=Asia/Bangkok
-  #   build: "./nginx"
-  #   ports:
-  #     - "8082:70"
-  #   networks:
-  #     audit-network:
-  #       ipv4_address: 192.168.1.5
-  #   depends_on:
-  #     - "backend-app1"
+  reverse-proxy-backend:
+    container_name: reverse-proxy-backend
+    environment:
+      - REVERSE_PROXY_PORT=8082
+      - TZ=Asia/Bangkok
+    build: "./nginx"
+    ports:
+      - "8082:70"
+    networks:
+      audit-network:
+        ipv4_address: 192.168.1.5
+    depends_on:
+      - "backend-app1"
 
 networks:
   audit-network:
