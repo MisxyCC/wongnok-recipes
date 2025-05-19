@@ -3,7 +3,7 @@ services:
     container_name: backend-app1
     env_file: ".env"
     environment:
-      - PORT=${BackendPort}
+      - PORT=8081
     build:
       context: ../backend/
       dockerfile: ../backend/Dockerfile
@@ -15,12 +15,12 @@ services:
     container_name: frontend-app
     env_file: ".env"
     environment:
-      - PORT=${FrontendPort}
+      - PORT=80
     build:
       context: ../frontend/
       dockerfile: ../frontend/Dockerfile
     ports:
-      - "${FrontendPort}:${FrontendPort}"
+      - "80:80"
     networks:
       audit-network:
         ipv4_address: 192.168.1.4
@@ -29,11 +29,11 @@ services:
     container_name: reverse-proxy-backend
     env_file: ".env"
     environment:
-      - REVERSE_PROXY_PORT=${ReverseProxyPort}
+      - REVERSE_PROXY_PORT=8082
       - TZ=Asia/Bangkok
     build: "./nginx"
     ports:
-      - "${ReverseProxyPort}:70"
+      - "8082:70"
     networks:
       audit-network:
         ipv4_address: 192.168.1.5
