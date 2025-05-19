@@ -15,8 +15,8 @@ services:
     environment:
       - PORT=80
     build:
-      context: ./
-      dockerfile: ./frontend/Dockerfile
+      context: ../frontend/
+      dockerfile: ../frontend/Dockerfile
     ports:
       - "80:80"
     networks:
