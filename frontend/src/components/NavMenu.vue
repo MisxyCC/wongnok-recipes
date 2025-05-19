@@ -30,8 +30,6 @@ const items = ref([
   },
 ]);
 
-
-
 // Logout function
 const logout = () => {
   console.log('Logout action triggered');

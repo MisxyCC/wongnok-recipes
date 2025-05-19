@@ -13,8 +13,8 @@
       </template>
       <template #subtitle>
         <span>
-            เจ้าของสูตรอาหาร
-            <Badge value="นาย s" severity="success"></Badge>
+          เจ้าของสูตรอาหาร
+          <Badge value="นาย s" severity="success"></Badge>
         </span>
       </template>
       <template #content>
@@ -25,26 +25,38 @@
       </template>
       <template #footer>
         <div class="flex flex-col md:flex-row gap-3 mt-1">
-          <Button label="ดูคะแนนรีวิว" class="w-full" />
-          <Button v-if="userStoreInstance.isAuthenticated" label="แก้ไขรายการ" severity="info" class="w-full" @click="isReceiptManagementShown = true"/>
-          <Button v-if="userStoreInstance.isAuthenticated" label="ลบรายการ" severity="danger" outlined class="w-full" />
+          <Button label="ดูคะแนนรีวิว" class="w-full" @click="isReviewCardVisible = true" />
+          <Button
+            v-if="userStoreInstance.isAuthenticated"
+            label="แก้ไขรายการ"
+            severity="info"
+            class="w-full"
+            @click="isReceiptManagementShown = true"
+          />
+          <Button
+            v-if="userStoreInstance.isAuthenticated"
+            label="ลบรายการ"
+            severity="danger"
+            outlined
+            class="w-full"
+          />
         </div>
       </template>
     </Card>
   </div>
   <ReceiptManagement v-model:visible="isReceiptManagementShown"></ReceiptManagement>
+  <ReviewCard v-model:visible="isReviewCardVisible"></ReviewCard>
 </template>
 
 <script setup lang="ts">
 import { userStoreInstance } from '@/main';
 import Badge from 'primevue/badge';
 import { ref, type Ref } from 'vue';
+import ReceiptManagement from '@/components/ReceiptManagement.vue';
+import ReviewCard from '@/components/ReviewCard.vue';
+
 const isReceiptManagementShown: Ref<boolean> = ref(false);
-function isAuthenticated() {
-  return userStoreInstance.isAuthenticated;
-}
+const isReviewCardVisible: Ref<boolean> = ref(false);
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>
