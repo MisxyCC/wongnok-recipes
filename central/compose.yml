@@ -1,6 +1,6 @@
 services:
-  backend-app1:
-    container_name: backend-app1
+  backend-app:
+    container_name: backend-app
     build:
       context: ../backend
       dockerfile: Dockerfile
@@ -18,7 +18,7 @@ services:
     networks:
       audit-network:
         ipv4_address: 192.168.1.4
-      
+
   reverse-proxy-backend:
     container_name: reverse-proxy-backend
     environment:
@@ -31,7 +31,7 @@ services:
       audit-network:
         ipv4_address: 192.168.1.5
     depends_on:
-      - "backend-app1"
+      - "backend-app"
 
   sqlserver:
     image: mcr.microsoft.com/mssql/server
@@ -47,11 +47,11 @@ services:
       audit-network:
         ipv4_address: 192.168.1.6
   sql-init:
-    image: mcr.microsoft.com/mssql-tools # Contains sqlcmd
+    image: mcr.microsoft.com/mssql-tools
     depends_on:
       - "sqlserver"
     volumes:
-      - ../database:/post-init-scripts # Mount your .sql scripts or .sh script
+      - ../database:/post-init-scripts
     command: >
       sh -c "
         echo 'Waiting for SQL Server to be fully ready...' &&
