@@ -1,6 +1,5 @@
 # Build stage
 FROM node:lts-alpine AS build-stage
-ARG PORT
 WORKDIR /app
 
 COPY package*.json ./

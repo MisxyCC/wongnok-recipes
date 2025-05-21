@@ -1,8 +1,6 @@
 services:
   backend-app1:
     container_name: backend-app1
-    environment:
-      - PORT=8081
     build:
       context: ../backend
       dockerfile: Dockerfile
@@ -12,8 +10,6 @@ services:
 
   frontend-app:
     container_name: frontend-app
-    environment:
-      - PORT=80
     build:
       context: ../frontend
       dockerfile: Dockerfile
@@ -59,7 +55,6 @@ services:
     command: >
       sh -c "
         echo 'Waiting for SQL Server to be fully ready...' &&
-        sleep 15 &&
         /opt/mssql-tools/bin/sqlcmd -S sqlserver -U SA -P 'yourStrong(!)Password' -d master -i /post-init-scripts/initialize.sql &&
         echo 'Post-start script executed successfully.' ||
         echo 'Post-start script execution failed.'
