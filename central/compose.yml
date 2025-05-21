@@ -37,6 +37,36 @@ services:
     depends_on:
       - "backend-app1"
 
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server
+    container_name: sqlserver
+    environment:
+      MSSQL_SA_PASSWORD: "yourStrong(!)Password"
+      ACCEPT_EULA: "Y"
+    ports:
+      - "1433:1433"
+    volumes:
+      - ../database:/post-init-scripts
+    networks:
+      audit-network:
+        ipv4_address: 192.168.1.6
+  sql-init:
+    image: mcr.microsoft.com/mssql-tools # Contains sqlcmd
+    depends_on:
+      - "sqlserver"
+    volumes:
+      - ../database:/post-init-scripts # Mount your .sql scripts or .sh script
+    command: >
+      sh -c "
+        echo 'Waiting for SQL Server to be fully ready...' &&
+        sleep 15 &&
+        /opt/mssql-tools/bin/sqlcmd -S sqlserver -U SA -P 'yourStrong(!)Password' -d master -i /post-init-scripts/initialize.sql &&
+        echo 'Post-start script executed successfully.' ||
+        echo 'Post-start script execution failed.'
+      "
+    networks:
+      audit-network:
+        ipv4_address: 192.168.1.7
 networks:
   audit-network:
     driver: bridge

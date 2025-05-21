@@ -12,7 +12,7 @@ CREATE TABLE [User] (
     UserUUID NVARCHAR(255) NOT NULL,
     Name NVARCHAR(255) NOT NULL,
     Username NVARCHAR(255) NOT NULL,
-    PasswordHash NVARCHAR(255) NOT NULL,
+    Password NVARCHAR(255) NOT NULL, -- In a real application, passwords should be hashed
     CreatedDate DATETIME2 NOT NULL,
     CONSTRAINT PK_User PRIMARY KEY (UserUUID)
 );
@@ -104,7 +104,38 @@ GO
 ALTER TABLE Review
 ADD CONSTRAINT FK_Review_User FOREIGN KEY (UpdatedBy)
 REFERENCES [User](UserUUID)
-ON DELETE NO ACTION -- A review should likely remain even if the user is deleted, or set to a guest/anonymous user.
-                   -- Or ON DELETE CASCADE if reviews by a deleted user should also be removed.
-ON UPDATE CASCADE;
+ON DELETE NO ACTION
+ON UPDATE NO ACTION;
 GO
+
+-- Verify the tables and constraints (Optional informational queries)
+/*
+SELECT 
+    TABLE_NAME
+FROM 
+    INFORMATION_SCHEMA.TABLES 
+WHERE 
+    TABLE_TYPE = 'BASE TABLE' AND TABLE_CATALOG='FoodRecipeDB';
+
+SELECT 
+    CONSTRAINT_NAME, 
+    TABLE_NAME, 
+    COLUMN_NAME, 
+    CONSTRAINT_TYPE
+FROM 
+    INFORMATION_SCHEMA.TABLE_CONSTRAINTS tc
+JOIN 
+    INFORMATION_SCHEMA.KEY_COLUMN_USAGE kcu ON tc.CONSTRAINT_NAME = kcu.CONSTRAINT_NAME
+WHERE 
+    tc.TABLE_CATALOG='FoodRecipeDB'
+ORDER BY
+    TABLE_NAME, CONSTRAINT_TYPE;
+
+EXEC sp_help '[User]';
+EXEC sp_help 'Difficulty';
+EXEC sp_help 'TimeUsed';
+EXEC sp_help 'FoodReceipt';
+EXEC sp_help 'Review';
+*/
+
+PRINT 'Database FoodRecipeDB and tables created successfully with foreign key constraints.';
