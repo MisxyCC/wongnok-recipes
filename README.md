@@ -1,30 +1,42 @@
-# Wongnok Web Application
+<!-- markdownlint-disable MD033 -->
+
+# Wongnok Food Receipt Web Application
 
 ## Overview
 
-This project is a web application for managing food receipts. It consists of a frontend application, a backend API, a reverse proxy for the backend, and a SQL Server database. The entire stack is designed to be run using Docker Compose for ease of development and deployment.
+This project is a full-stack web application designed for managing food receipts. It comprises a frontend application, a backend API, a reverse proxy for the backend, and a SQL Server database, all orchestrated using Docker Compose for streamlined development and deployment.
+
+The primary goal is to provide a robust and easy-to-run environment for developing and testing the food receipt management system.
 
 ## Project Structure
 
-The project is organized into the following main directories:
+The repository is organized into the following key directories:
 
--   `backend/`: Contains the source code and Dockerfile for the backend application.
--   `frontend/`: Contains the source code and Dockerfile for the frontend application.
--   `central/`: Contains the main `compose.yml` file and configurations for shared services like the reverse proxy (`central/nginx/`).
--   `database/`: Contains SQL initialization scripts (`database/initialize.sql`).
+-   `backend/`: Contains the source code and Dockerfile for the backend API application.
+-   `frontend/`: Contains the source code and Dockerfile for the user-facing frontend application.
+-   `central/`: Houses the main `compose.yml` file and configurations for shared infrastructure services, such as the Nginx reverse proxy (`central/nginx/`).
+
+## Tech Stack (Example - Please Update)
+
+*   **Frontend:** (e.g., React, Vue, Angular, HTML/CSS/JS)
+*   **Backend:** (e.g., Node.js with Express, Python with Django/Flask, Java Spring Boot)
+*   **Database:** Microsoft SQL Server
+*   **Reverse Proxy:** Nginx
+*   **Containerization:** Docker, Docker Compose
 
 ## Prerequisites
 
-Before you begin, ensure you have the following installed on your system:
+To build and run this project locally using Docker Compose, you need to have the following installed:
 
--   Docker
--   Docker Compose
+-   Docker Engine
+-   Docker Compose (usually included with Docker Desktop)
 
 ## Getting Started
 
-Follow these steps to get the application up and running:
+Follow these steps to set up and run the application stack on your local machine:
 
-1.  **Clone the repository (if you haven't already):**
+1.  **Clone the repository:**
+    If you haven't already, clone the project repository:
     ```bash
     git clone <your-repository-url>
     cd food-receipt-web
@@ -36,121 +48,129 @@ Follow these steps to get the application up and running:
     cd central
     ```
 
-3.  **Build and run the application:**
-    Use Docker Compose to build the images and start the services.
+4.  **Build and run the application stack:**
+    Use Docker Compose to build the necessary Docker images and start all defined services. The `--build` flag ensures images are rebuilt if their source files or Dockerfiles have changed.
     ```bash
     docker-compose up --build
     ```
-    To run in detached mode (in the background):
+    To run the services in the background (detached mode):
     ```bash
     docker-compose up --build -d
     ```
+    The first build might take some time depending on your internet connection and system resources.
 
-4.  **Stopping the application:**
-    To stop the services:
+5.  **Verify Services:**
+    Once `docker-compose up` completes, you can check the status of your services:
+    ```bash
+    docker-compose ps
+    ```
+
+6.  **Stopping the application:**
+    To stop all running services defined in the `compose.yml`:
     ```bash
     docker-compose down
     ```
-    If you want to remove the volumes as well (e.g., to reset the database):
+    To stop services and remove the volumes (useful for resetting the database state, including data in named volumes if configured):
     ```bash
     docker-compose down -v
     ```
 
-## Services
+## Configuration
 
-The `compose.yml` defines the following services:
+Key configurations are managed via environment variables, primarily defined within the `compose.yml` file or, preferably for sensitive data, sourced from a `.env` file in the `central/` directory.
+
+-   **Database (`sqlserver`):**
+    -   `MSSQL_SA_PASSWORD`: The password for the SQL Server 'SA' user. **CRITICAL:** The default `"yourStrong(!)Password"` in `compose.yml` is highly insecure. **Always override this** using a `.env` file (as suggested in "Getting Started").
+    -   `ACCEPT_EULA`: Must be set to `"Y"` to accept the Microsoft SQL Server license terms.
+-   **Reverse Proxy (`reverse-proxy-backend`):**
+    -   The Nginx container listens on port `70` internally, which is mapped to host port `8082` (as defined by `ports: - "8082:70"` in `compose.yml`).
+    -   `REVERSE_PROXY_PORT=8082`: This environment variable is set to `8082`. It might be used by the Nginx configuration for internal logic (e.g., generating redirect URLs) but does not define the Nginx listening port within the container.
+    -   `TZ`: Sets the timezone for the container (e.g., `Asia/Bangkok`).
+
+Other services (`backend-app`, `frontend-app`) may have their own environment variables defined in their respective Dockerfiles or within the `compose.yml`. Refer to their specific documentation or code for details.
+
+## Services Overview
+
+The `compose.yml` file defines the following services:
 
 ### `backend-app`
 
--   **Container Name:** `backend-app`
+-   **Description:** The core backend application/API responsible for business logic and data interaction.
 -   **Build Context:** `../backend`
--   **Description:** The main backend application/API for the food receipt system.
 -   **Network:** `wongnok-network` (Static IP: `192.168.1.2`)
+-   **Access:** Typically accessed internally by the `reverse-proxy-backend` service using its service name (`http://backend-app:<PORT>`).
 
 ### `frontend-app`
 
--   **Container Name:** `frontend-app`
+-   **Description:** The user interface application that users interact with.
 -   **Build Context:** `../frontend`
--   **Description:** The user-facing frontend application.
--   **Ports:** `80:80` (Accessible via `http://localhost` or `http://localhost:80`)
+-   **Ports:** `80:80` (Maps container port 80 to host port 80)
 -   **Network:** `wongnok-network` (Static IP: `192.168.1.4`)
+-   **Access:** Accessible from your host machine's browser.
 
 ### `reverse-proxy-backend`
 
--   **Container Name:** `reverse-proxy-backend`
+-   **Description:** An Nginx instance acting as a reverse proxy for the `backend-app`. It handles routing requests to the backend.
 -   **Build Context:** `./nginx` (relative to `central/` directory)
--   **Description:** An Nginx reverse proxy that sits in front of the `backend-app`.
--   **Ports:** `8082:70` (Accessible via `http://localhost:8082`. Nginx inside the container listens on port `70`.)
--   **Depends On:** `backend-app`
--   **Environment Variables:**
-    -   `REVERSE_PROXY_PORT=8082` (Note: Host port is defined by `ports` mapping)
-    -   `TZ=Asia/Bangkok`
+-   **Ports:** `8082:70` (Maps container port 70 to host port 8082)
+-   **Depends On:** `backend-app` (Ensures backend starts before the proxy)
 -   **Network:** `wongnok-network` (Static IP: `192.168.1.5`)
+-   **Access:** Accessible from your host machine.
 
 ### `sqlserver`
 
--   **Container Name:** `sqlserver`
+-   **Description:** A Microsoft SQL Server database instance used to store application data.
 -   **Image:** `mcr.microsoft.com/mssql/server`
--   **Description:** Microsoft SQL Server database instance.
--   **Ports:** `1433:1433` (Accessible on the host at port `1433`)
--   **Environment Variables:**
-    -   `MSSQL_SA_PASSWORD="yourStrong(!)Password"` (Consider using a `.env` file for sensitive data in production)
-    -   `ACCEPT_EULA="Y"`
--   **Volumes:**
-    -   `../database:/post-init-scripts` (This volume seems intended for `sql-init`. For data persistence, consider mapping a volume to `/var/opt/mssql`.)
+-   **Ports:** `1433:1433` (Maps container port 1433 to host port 1433)
 -   **Network:** `wongnok-network` (Static IP: `192.168.1.6`)
-
-### `sql-init`
-
--   **Image:** `mcr.microsoft.com/mssql-tools`
--   **Description:** A utility service to initialize the `sqlserver` database using scripts.
--   **Depends On:** `sqlserver`
--   **Volumes:** `../database:/post-init-scripts` (Mounts the `../database` directory, which should contain `initialize.sql`)
--   **Command:** Executes `/post-init-scripts/initialize.sql` against the `sqlserver` instance.
--   **Network:** `wongnok-network` (Static IP: `192.168.1.7`)
+-   **Access:** Accessible from your host machine using a SQL client, and from other services on the `wongnok-network` using `sqlserver:1433`.
 
 ## Networking
 
-All services are connected to a custom bridge network named `wongnok-network` (`192.168.1.0/24`). Each service is assigned a static IP address within this network, which can be useful for inter-service communication if needed, though Docker Compose service names are generally preferred.
+All services are connected to a custom Docker bridge network named `wongnok-network` with a subnet of `192.168.1.0/24`.
 
-## Environment Variables
-
-Key environment variables are defined within the `compose.yml`:
-
--   **`sqlserver`**:
-    -   `MSSQL_SA_PASSWORD`: The password for the SQL Server 'SA' user. **Important:** The default value `"yourStrong(!)Password"` is insecure and should be changed, especially for any non-local environments. Consider managing this with a `.env` file and `env_file` directive in `compose.yml` or Docker secrets.
-    -   `ACCEPT_EULA`: Must be "Y" to use the MS SQL Server image.
--   **`reverse-proxy-backend`**:
-    -   `REVERSE_PROXY_PORT`: Set to `8082`. The actual host port exposure is `8082:70`.
-    -   `TZ`: Timezone for the reverse proxy container, set to `Asia/Bangkok`.
+Each service is assigned a static IP address within this network. While static IPs are configured, it's **highly recommended** to use Docker's built-in DNS and refer to services by their service names (e.g., `backend-app`, `sqlserver`) for inter-service communication within the Docker network. This is more robust and flexible than relying on hardcoded IP addresses.
 
 ## Accessing the Application
 
--   **Frontend:** `http://localhost` (or `http://localhost:80`)
--   **Backend API (via Reverse Proxy):** `http://localhost:8082`
--   **SQL Server Database:** Can be accessed on `localhost:1433` using a SQL client (e.g., Azure Data Studio, DBeaver) with username `SA` and the password defined in `MSSQL_SA_PASSWORD`.
+Once the Docker Compose stack is running, you can access the application components from your host machine:
 
-## Database Initialization
+-   **Frontend Application:** Open your web browser and go to `http://localhost` (or `http://localhost:80`).
+-   **Backend API (via Reverse Proxy):** Access the API endpoints through the reverse proxy at `http://localhost:8082`.
+-   **SQL Server Database:** Connect using a SQL client (like Azure Data Studio, SQL Server Management Studio, DBeaver, etc.) to `localhost:1433` with username `SA` and the password you configured in your `.env` file (via `MSSQL_SA_PASSWORD`).
 
-The `sql-init` service automatically runs when you start the services with `docker-compose up`. It waits for `sqlserver` to be ready and then executes the `../database/initialize.sql` script.
+-   **Connecting to the Database:** Use a SQL client and the connection details provided in the "Accessing the Application" section.
+-   **Hot-Reloading / Live Development:**
+    To enable automatic reloading of your frontend or backend applications when you make code changes (without needing to rebuild the Docker image each time), map your local source code directories into the respective containers. Add `volumes` sections to your `frontend-app` and `backend-app` services in `compose.yml`. For example:
+    ```yaml
+    # In your compose.yml
+    services:
+      frontend-app:
+        # ... other frontend-app config ...
+        volumes:
+          - ../frontend:/app # Maps the entire local frontend directory to /app in the container
+          # Depending on your frontend setup, you might need to exclude node_modules:
+          # - /app/node_modules # Anonymous volume to keep container's node_modules
 
-The script path is relative to the `compose.yml` file in the `central/` directory. Ensure your `initialize.sql` file is present in the `database/` directory at the project root.
+      backend-app:
+        # ... other backend-app config ...
+        volumes:
+          - ../backend:/app # Maps the entire local backend directory to /app in the container
+          # Add other necessary volume mounts if needed (e.g., for dependencies not in source)
+    ```
+    *Note: The exact paths (`/app`, exclusion of `node_modules`) depend on your specific frontend/backend Dockerfile setup and how your development server watches for changes.*
 
-Logs from this service will indicate success or failure:
-```
-sql-init_1  | Waiting for SQL Server to be fully ready...
-sql-init_1  | Post-start script executed successfully.
-```
-or
-```
-sql-init_1  | Post-start script execution failed.
-```
+-   **Debugging:** Configure your IDE (VS Code, IntelliJ, etc.) to attach to the running Docker containers for debugging the backend or frontend code. Docker extensions for IDEs can simplify this process.
+-   **Viewing Logs:** To view logs for all services: `docker-compose logs -f`. To view logs for a specific service: `docker-compose logs -f <service-name>` (e.g., `docker-compose logs -f backend-app`).
 
 ## Troubleshooting
 
--   **Port Conflicts:** If you encounter errors about ports already being in use (e.g., for port 80, 8082, or 1433), ensure no other applications on your host machine are using these ports. You can change the host-side port mappings in the `compose.yml` file if necessary (e.g., change `"80:80"` to `"8081:80"`).
--   **`sql-init` fails:** Check the logs of the `sql-init` container (`docker-compose logs sql-init`). Ensure `sqlserver` is running correctly and that the `initialize.sql` script is valid and accessible at `../database/initialize.sql`.
--   **Build failures:** Check the logs during the `docker-compose up --build` process for specific error messages related to Dockerfile instructions or missing dependencies in the `backend`, `frontend`, or `central/nginx` directories.
+-   **Port Conflicts:** If `docker-compose up` fails due to ports already being in use (e.g., 80, 8082, 1433), identify the conflicting process on your host machine and stop it, or modify the host-side port mappings in the `compose.yml` (e.g., change `"80:80"` to `"8081:80"`).
+-   **Container Logs:** Check the logs of individual containers for errors using `docker-compose logs <service-name>` (e.g., `docker-compose logs sqlserver`). Add the `-f` flag to follow logs in real-time.
+-   **Database Initialization:** If the database doesn't seem initialized correctly:
+    -   Check the logs of the `sqlserver` container.
+-   **Build Failures:** Examine the output of `docker-compose up --build` carefully for errors during the build process of `backend-app`, `frontend-app`, or `reverse-proxy-backend`. These usually indicate issues with the Dockerfiles, source code, or dependencies.
+-   **Permissions Issues (Volume Mounts):** If you're mounting local source code and encounter permission errors within the container, you might need to adjust file ownership or permissions, or configure your Docker containers to run with a user that matches your host user ID/GID.
 
 ## License
 

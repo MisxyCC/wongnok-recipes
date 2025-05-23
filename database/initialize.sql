@@ -11,7 +11,7 @@ GO
 
 -- Table: User
 -- Stores information about users
-CREATE TABLE [User] (
+CREATE TABLE Users (
     UserUUID NVARCHAR(255) NOT NULL,
     Name NVARCHAR(255) NOT NULL,
     Username NVARCHAR(255) NOT NULL,
@@ -21,33 +21,33 @@ CREATE TABLE [User] (
 );
 GO
 
--- Table: Difficulty
--- Stores different difficulty levels for recipes
-CREATE TABLE Difficulty (
-    DifficultyUUID NVARCHAR(255) NOT NULL,
+-- Table: Difficulties
+-- Stores different Difficulties levels for recipes
+CREATE TABLE Difficulties (
+    DifficultiesUUID NVARCHAR(255) NOT NULL,
     Name NVARCHAR(255) NOT NULL,
-    CONSTRAINT PK_Difficulty PRIMARY KEY (DifficultyUUID)
+    CONSTRAINT PK_Difficulties PRIMARY KEY (DifficultiesUUID)
 );
 GO
 
--- Table: TimeUsed
+-- Table: TimeUseds
 -- Stores categories for time taken to prepare recipes
-CREATE TABLE TimeUsed (
+CREATE TABLE TimeUseds (
     TimeUUID NVARCHAR(255) NOT NULL,
-    TimeUsed NVARCHAR(255) NOT NULL,
-    CONSTRAINT PK_TimeUsed PRIMARY KEY (TimeUUID)
+    TimeUseds NVARCHAR(255) NOT NULL,
+    CONSTRAINT PK_TimeUseds PRIMARY KEY (TimeUUID)
 );
 GO
 
--- Table: FoodReceipt
+-- Table: FoodReceipts
 -- Stores details about food recipes
-CREATE TABLE FoodReceipt (
+CREATE TABLE FoodReceipts (
     FoodUUID NVARCHAR(255) NOT NULL,
     UserUUID NVARCHAR(255) NULL,         
     Name NVARCHAR(255) NOT NULL,
     ImageUrl NVARCHAR(255) NULL,          
     Ingredients NVARCHAR(MAX) NOT NULL,    
-    DifficultyID NVARCHAR(255) NOT NULL,  
+    DifficultiesID NVARCHAR(255) NOT NULL,  
     Steps NVARCHAR(MAX) NOT NULL,          
     TimeID NVARCHAR(255) NOT NULL,         
     LastUpdated DATETIME2 NOT NULL,
@@ -55,57 +55,57 @@ CREATE TABLE FoodReceipt (
 );
 GO
 
--- Table: Review
--- Stores user reviews for food recipes
-CREATE TABLE Review (
-    ReviewUUID NVARCHAR(255) NOT NULL,
-    FoodReceiptUUID NVARCHAR(255) NOT NULL, 
+-- Table: Reviews
+-- Stores user Reviewss for food recipes
+CREATE TABLE Reviews (
+    ReviewsUUID NVARCHAR(255) NOT NULL,
+    FoodReceiptsUUID NVARCHAR(255) NOT NULL, 
     Details NVARCHAR(MAX) NOT NULL,        
     Rating TINYINT NOT NULL,               
     LastUpdated DATETIME2 NOT NULL,
     UpdatedBy NVARCHAR(255) NOT NULL,      
-    CONSTRAINT PK_Review PRIMARY KEY (ReviewUUID),
+    CONSTRAINT PK_Reviews PRIMARY KEY (ReviewsUUID),
     CONSTRAINT CK_Rating CHECK (Rating >= 1 AND Rating <= 5)
 );
 GO
 
 
--- Foreign Key: FoodReceipt.UserUUID -> User.UserUUID
-ALTER TABLE FoodReceipt
-ADD CONSTRAINT FK_FoodReceipt_User FOREIGN KEY (UserUUID)
-REFERENCES [User](UserUUID)
+-- Foreign Key: FoodReceipts.UserUUID -> User.UserUUID
+ALTER TABLE FoodReceipts
+ADD CONSTRAINT FK_FoodReceipts_User FOREIGN KEY (UserUUID)
+REFERENCES Users(UserUUID)
 ON DELETE SET NULL
 ON UPDATE CASCADE;
 GO
 
--- Foreign Key: FoodReceipt.DifficultyID -> Difficulty.DifficultyUUID
-ALTER TABLE FoodReceipt
-ADD CONSTRAINT FK_FoodReceipt_Difficulty FOREIGN KEY (DifficultyID)
-REFERENCES Difficulty(DifficultyUUID)
+-- Foreign Key: FoodReceipts.DifficultiesID -> Difficulties.DifficultiesUUID
+ALTER TABLE FoodReceipts
+ADD CONSTRAINT FK_FoodReceipts_Difficulties FOREIGN KEY (DifficultiesID)
+REFERENCES Difficulties(DifficultiesUUID)
 ON DELETE NO ACTION
 ON UPDATE CASCADE;
 GO
 
--- Foreign Key: FoodReceipt.TimeID -> TimeUsed.TimeUUID
-ALTER TABLE FoodReceipt
-ADD CONSTRAINT FK_FoodReceipt_TimeUsed FOREIGN KEY (TimeID)
-REFERENCES TimeUsed(TimeUUID)
+-- Foreign Key: FoodReceipts.TimeID -> TimeUseds.TimeUUID
+ALTER TABLE FoodReceipts
+ADD CONSTRAINT FK_FoodReceipts_TimeUseds FOREIGN KEY (TimeID)
+REFERENCES TimeUseds(TimeUUID)
 ON DELETE NO ACTION
 ON UPDATE CASCADE;
 GO
 
--- Foreign Key: Review.FoodReceiptUUID -> FoodReceipt.FoodUUID (Added this FK as it's logically necessary for a review)
-ALTER TABLE Review
-ADD CONSTRAINT FK_Review_FoodReceipt FOREIGN KEY (FoodReceiptUUID)
-REFERENCES FoodReceipt(FoodUUID)
+-- Foreign Key: Reviews.FoodReceiptsUUID -> FoodReceipts.FoodUUID (Added this FK as it's logically necessary for a Reviews)
+ALTER TABLE Reviews
+ADD CONSTRAINT FK_Reviews_FoodReceipts FOREIGN KEY (FoodReceiptsUUID)
+REFERENCES FoodReceipts(FoodUUID)
 ON DELETE CASCADE
 ON UPDATE CASCADE;
 GO
 
--- Foreign Key: Review.UpdatedBy -> User.UserUUID
-ALTER TABLE Review
-ADD CONSTRAINT FK_Review_User FOREIGN KEY (UpdatedBy)
-REFERENCES [User](UserUUID)
+-- Foreign Key: Reviews.UpdatedBy -> User.UserUUID
+ALTER TABLE Reviews
+ADD CONSTRAINT FK_Reviews_User FOREIGN KEY (UpdatedBy)
+REFERENCES Users(UserUUID)
 ON DELETE NO ACTION
 ON UPDATE NO ACTION;
 GO
