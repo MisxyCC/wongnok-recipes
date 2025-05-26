@@ -18,8 +18,8 @@ The repository is organized into the following key directories:
 
 ## Tech Stack (Example - Please Update)
 
-*   **Frontend:** (e.g., React, Vue, Angular, HTML/CSS/JS)
-*   **Backend:** (e.g., Node.js with Express, Python with Django/Flask, Java Spring Boot)
+*   **Frontend:** Vue 3
+*   **Backend:** Gin web framework (Golang)
 *   **Database:** Microsoft SQL Server
 *   **Reverse Proxy:** Nginx
 *   **Containerization:** Docker, Docker Compose
